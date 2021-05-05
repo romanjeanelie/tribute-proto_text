@@ -1,13 +1,14 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import fragment from "./shaders/fragment.glsl";
-import vertex from "./shaders/vertex.glsl";
+import * as dat from "dat.gui";
 
 import Text from "./text";
-import Structure from "./structure";
+import Moon from "./moon";
 
 export default class Sketch {
   constructor(options) {
+    this.gui = new dat.GUI();
+
     this.time = 0;
 
     this.container = options.dom;
@@ -17,8 +18,9 @@ export default class Sketch {
     this.width = this.container.offsetWidth;
     this.height = this.container.offsetHeight;
 
-    this.camera = new THREE.PerspectiveCamera(70, this.width / this.height, 0.01, 10);
-    this.camera.position.z = 2;
+    this.camera = new THREE.PerspectiveCamera(70, this.width / this.height, 0.01, 100);
+    //this.camera.position.y = 30;
+    this.camera.position.z = 5;
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     // this.renderer.setSize(this.width, this.height);
@@ -56,8 +58,9 @@ export default class Sketch {
   }
 
   addObject() {
-    this.text = new Text(this.scene);
-    this.structure = new Structure(this.scene);
+    this.text = new Text({ scene: this.scene, gui: this.gui });
+
+    this.moon = new Moon({ scene: this.scene, gui: this.gui });
   }
 
   render() {
